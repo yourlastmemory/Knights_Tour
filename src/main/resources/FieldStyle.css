@@ -1,0 +1,12 @@
+.label{
+    -fx-width: 12px;
+    -fx-height: 12px;
+    -fx-font-size: 10px;
+    -fx-text-fill: chartreuse;
+}
+.white-cell{
+    background: white;
+}
+.black-cell{
+    background: black;
+}

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController" >
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="%menu_file">
+            <items>
+                  <MenuItem mnemonicParsing="false" text="%menu_file_save" />
+              <MenuItem mnemonicParsing="false" text="%menu_file_exit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="%menu_settings">
+               <items>
+                  <Menu mnemonicParsing="false" text="%menu_settings_design">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="%menu_settings_language">
+                    <items>
+                        <RadioMenuItem mnemonicParsing="false" selected="true" text="Deutch">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="tgLanguage" />
+                           </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" text="English" toggleGroup="$tgLanguage" />
+                        <RadioMenuItem mnemonicParsing="false" text="Español" toggleGroup="$tgLanguage" />
+                        <RadioMenuItem mnemonicParsing="false" text="Français" toggleGroup="$tgLanguage" />
+                        <RadioMenuItem mnemonicParsing="false" text="Italiano" toggleGroup="$tgLanguage" />
+                        <RadioMenuItem mnemonicParsing="false" text="Русский" toggleGroup="$tgLanguage" />
+                    </items>
+                  </Menu>
+               </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="%menu_help">
+            <items>
+                  <MenuItem mnemonicParsing="false" text="%menu_help_user_manual" />
+              <MenuItem mnemonicParsing="false" text="%menu_help_knights_tour" />
+                  <Menu mnemonicParsing="false" text="%menu_help_methods">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="%meth_euler" />
+                      <MenuItem mnemonicParsing="false" text="%meth_frame" />
+                        <MenuItem mnemonicParsing="false" text="%meth_neural" />
+                        <MenuItem mnemonicParsing="false" text="%meth_parts" />
+                        <MenuItem mnemonicParsing="false" text="%meth_warndorf" />
+                    </items>
+                  </Menu>
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <left>
+      <VBox prefHeight="575.0" prefWidth="223.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <GridPane hgap="5.0" vgap="10.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="106.0" minWidth="10.0" prefWidth="95.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="10.0" prefWidth="55.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label alignment="CENTER" prefHeight="27.0" prefWidth="204.0" text="%cnt_size" GridPane.columnSpan="4">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <RadioButton mnemonicParsing="false" onAction="#btnStandard" selected="true" text="%cnt_size_standard" GridPane.rowIndex="1">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="tgFieldSize" />
+                     </toggleGroup></RadioButton>
+                  <RadioButton mnemonicParsing="false" onAction="#btnCustom" text="%cnt_size_custom" toggleGroup="$tgFieldSize" GridPane.rowIndex="2" />
+                  <Spinner fx:id="spHeight" minWidth="50.0" prefHeight="25.0" prefWidth="50.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <Label text="%cnt_size_height" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label text="%cnt_size_width" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Spinner fx:id="spWidth" minWidth="50.0" prefHeight="25.0" prefWidth="50.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                  <Button mnemonicParsing="false" onAction="#btnBuild" prefWidth="90.0" text="%cnt_btn_build" GridPane.rowIndex="5" />
+                  <Button mnemonicParsing="false" onAction="#btnCheck" prefHeight="25.0" prefWidth="90.0" text="%cnt_btn_check" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Label alignment="CENTER" prefHeight="27.0" prefWidth="213.0" text="%cnt_str_display_route" GridPane.columnSpan="3" GridPane.rowIndex="6">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <RadioButton mnemonicParsing="false" onAction="#btnNumbers" text="%cnt_display_numbers" GridPane.rowIndex="7">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="tgDisplay" />
+                     </toggleGroup></RadioButton>
+                  <RadioButton mnemonicParsing="false" onAction="#btnLines" text="%cnt_display_lines" toggleGroup="$tgDisplay" GridPane.rowIndex="8" />
+               </children>
+            </GridPane>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+      </VBox>
+   </left>
+   <right>
+      <VBox alignment="TOP_CENTER" prefHeight="575.0" prefWidth="211.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" text="%cnt_str_threads">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <ListView fx:id="lvThreads" prefHeight="334.0" prefWidth="211.0" />
+            <HBox alignment="CENTER" spacing="15.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#btnAdd" prefWidth="80.0" text="%cnt_btn_add" />
+                  <Button mnemonicParsing="false" onAction="#btnDelete" prefWidth="80.0" text="%cnt_btn_delete" />
+               </children>
+            </HBox>
+            <Label text="%cnt_str_result">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <ListView fx:id="lvResults" prefHeight="200.0" prefWidth="200.0" />
+         </children></VBox>
+   </right>
+   <bottom>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="50.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button minHeight="40.0" mnemonicParsing="false" onAction="#btnStart" prefWidth="200.0" text="%cnt_btn_start" />
+            <Button minHeight="40.0" mnemonicParsing="false" onAction="#btnStop" prefWidth="200.0" text="%cnt_btn_stop" />
+            <Button mnemonicParsing="false" onAction="#btnReset" prefHeight="40.0" prefWidth="200.0" text="%cnt_btn_reset" />
+         </children></HBox>
+   </bottom>
+   <center>
+      <Pane BorderPane.alignment="CENTER">
+         <children>
+            <GridPane fx:id="gpField" prefHeight="575.0" prefWidth="561.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+         </children>
+      </Pane>
+   </center>
+</BorderPane>

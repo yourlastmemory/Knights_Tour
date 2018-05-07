@@ -9,11 +9,7 @@ public class EulerVandermonde extends KnightsTour {
 
     @Override
     public String toString() {
-        String str="Path:\n";
-        for (int i = 0; i < getPath().size(); i++) {
-            str=str.concat((i+1)+' '+getPath().get(i)[0]+"  "+getPath().get(i)[1]+'\n');
-        }
-        return str;
+        return super.toString();
     }
 
     public EulerVandermonde(int width, int height) {

@@ -13,6 +13,16 @@ public abstract class KnightsTour {
     private Integer fieldWidth;
     private Integer fieldHeight;
     private String color;
+    private Integer delay;
+
+    public Integer getDelay() {
+        return delay;
+    }
+
+    public void setDelay(Integer delay) {
+        this.delay = delay;
+    }
+
     private static ArrayList<String> colorsList =
             new ArrayList<>(Arrays.asList(
                     "RED", "GREEN", "BLUE",
@@ -224,5 +234,12 @@ public abstract class KnightsTour {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return "KnightsTour" +
+                "\ncolor = " + color+
+                "\ndelay = "+getDelay();
     }
 }

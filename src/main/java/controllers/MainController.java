@@ -3,6 +3,8 @@ package controllers;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -14,6 +16,8 @@ import model.solutions.EulerVandermonde;
 import model.solutions.KnightsTour;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -36,6 +40,8 @@ public class MainController {
 
     @FXML
     private Spinner<Integer> spWidth;
+    @FXML
+    private Spinner<Integer> spDelay;
 
     @FXML
     private ToggleGroup tgDisplay;
@@ -49,9 +55,10 @@ public class MainController {
     @FXML
     private volatile GridPane gpField;
 
-    private volatile ObservableList<ObservableList<Label>> numbersList=FXCollections.observableArrayList();
+    private  ObservableList<ObservableList<Label>> numbersList=FXCollections.observableArrayList();
 
     private void setControlsBehaviour(){
+        spDelay.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(100,2000,100,100));
         spHeight.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(3,11,1, 1));
         spWidth.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(3,11,1, 1));
         tgLanguage.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
@@ -91,15 +98,19 @@ public class MainController {
         });
     }
 
+    private List<Label> illegalTajics=new ArrayList<>();
+    private List<Service<Void>> backgroundThreads=new ArrayList<>();
+
 
     @FXML
-    void btnAdd(ActionEvent event) {
+    void btnAdd() {
         if (lvThreads.getItems().size()<9)
         lvThreads.getItems().add(new EulerVandermonde(spWidth.getValue(),spHeight.getValue()));
+        lvThreads.getItems().get(lvThreads.getItems().size()-1).setDelay(spDelay.getValue());
     }
 
     @FXML
-    void btnBuild(ActionEvent event) {
+    void btnBuild() {
         numbersList.clear();
         gpField.getChildren().clear();
         gpField.getColumnConstraints().clear();
@@ -142,7 +153,7 @@ public class MainController {
     }
 
     @FXML
-    void btnCheck(ActionEvent event) {
+    void btnCheck() {
         if ((spWidth.getValue()>3&&spHeight.getValue()>4)||(spWidth.getValue()>4&&spHeight.getValue()>3))
             new Alert(Alert.AlertType.INFORMATION,"для поля заданного размера можно построить маршрут",ButtonType.OK).showAndWait();
         else
@@ -151,69 +162,150 @@ public class MainController {
     }
 
     @FXML
-    void btnCustom(ActionEvent event) {
+    void btnCustom() {
 
     }
 
     @FXML
-    void btnDelete(ActionEvent event) {
+    void btnDelete() {
 
     }
 
     @FXML
-    void btnLines(ActionEvent event) {
+    void btnLines() {
 
     }
 
     @FXML
-    void btnNumbers(ActionEvent event) {
+    void btnNumbers() {
 
     }
 
     @FXML
-    void btnReset(ActionEvent event) {
+    void btnReset() {
+        btnBuild();
+        lvThreads.getItems().clear();
+    }
+
+    @FXML
+    void btnStandard() {
 
     }
 
     @FXML
-    void btnStandard(ActionEvent event) {
-
-    }
-
-    @FXML
-    void btnStart(ActionEvent event) {
+    void btnStart() {
+        illegalTajics.clear();
+        backgroundThreads.clear();
         KnightsTour.refreshColors();
         System.out.println("btn start");
-        for (int threads = 0; threads <lvThreads.getItems().size(); threads++) {
-            KnightsTour kt=lvThreads.getItems().get(threads);
+        for (int threads = 0; threads < lvThreads.getItems().size(); threads++) {
+            KnightsTour kt = lvThreads.getItems().get(threads);
             kt.startFinding();
-            final int threadNumber= threads;
+            final int threadNumber = threads;
 
-            Platform.runLater(() -> {
-                System.out.println("color "+(kt.getColor()==null));
-                for (int i = 0; i <kt.getPath().size(); i++) {
-                    Label changed=numbersList.get(kt.getPath().get(i)[0]*3 +threadNumber%3)
-                            .get(kt.getPath().get(i)[1]*3+(int)Math.floor(threadNumber/3));
-                    gpField.getChildren().remove(changed);
-                    changed=createLabel(kt.getPath().get(i)[0]*3 +threadNumber%3,
-                            kt.getPath().get(i)[1]*3+(int)Math.floor(threadNumber/3),kt.getColor(),i+1);
-                    gpField.add(changed, kt.getPath().get(i)[0]*3 +threadNumber%3,
-                            kt.getPath().get(i)[1]*3+(int)Math.floor(threadNumber/3));
+//            RUN LATER
+//            Platform.runLater(() -> {
+//                System.out.println("color "+(kt.getColor()==null));
+//                for (int i = 0; i <kt.getPath().size(); i++) {
+//                    Label changed=numbersList.get(kt.getPath().get(i)[0]*3 +threadNumber%3)
+//                            .get(kt.getPath().get(i)[1]*3+(int)Math.floor(threadNumber/3));
+//                    gpField.getChildren().remove(changed);
+//                    changed=createLabel(kt.getPath().get(i)[0]*3 +threadNumber%3,
+//                            kt.getPath().get(i)[1]*3+(int)Math.floor(threadNumber/3),kt.getColor(),i+1);
+//                    gpField.add(changed, kt.getPath().get(i)[0]*3 +threadNumber%3,
+//                            kt.getPath().get(i)[1]*3+(int)Math.floor(threadNumber/3));
+//
+//                    try {
+//                        System.out.println("sleep #"+threadNumber+" i="+i);
+//                        Thread.sleep(200);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
 
-                    try {
-                        System.out.println("sleep #"+threadNumber+" i="+i);
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+//            WITH TASK
+            backgroundThreads.add(new Service<Void>() {
+                @Override
+                protected Task<Void> createTask() {
+                    return new Task<>() {
+                        @Override
+                        protected Void call() {
+                            for (int i = 0; i < kt.getPath().size(); i++) {
+                                try {
+                                    updateMessage(kt.getColor() + ',' +
+                                            i + ',' +
+                                            (kt.getPath().get(i)[0] * 3 + threadNumber % 3) + ',' +
+                                            (kt.getPath().get(i)[1] * 3 + (int) Math.floor(threadNumber / 3)) + ',');
+
+                                    System.out.println("sleep #" + threadNumber + " i=" + i);
+                                    Thread.sleep(kt.getDelay());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            return null;
+                        }
+                    };
                 }
             });
+            Label listener=new Label();
+            listener.textProperty().bind(backgroundThreads.get(backgroundThreads.size()-1).messageProperty());
+            listener.textProperty().addListener((observable, oldValue, newValue) -> {
+                changeCell(newValue);
+            });
+            illegalTajics.add(listener);
+        }
+        for (Service<Void> backgroundThread : backgroundThreads) {
+            backgroundThread.restart();
         }
     }
 
-    @FXML
-    void btnStop(ActionEvent event) {
+    private void changeCell(String newValue) {
+        StringBuilder strColor=new StringBuilder("");
+        StringBuilder strStep=new StringBuilder("");
+        StringBuilder strI=new StringBuilder("");
+        StringBuilder strJ=new StringBuilder("");
+        int x=0;
+        while (newValue.toCharArray()[x]!=','){
+            strColor.append(newValue.toCharArray()[x]);
+            x++;
+        }
+        x++;
+        while (newValue.toCharArray()[x]!=','){
+            strStep.append(newValue.toCharArray()[x]);
+            x++;
+        }
+        x++;
+        while (newValue.toCharArray()[x]!=','){
+            strI.append(newValue.toCharArray()[x]);
+            x++;
+        }
+        x++;
+        while (newValue.toCharArray()[x]!=','){
+            strJ.append(newValue.toCharArray()[x]);
+            x++;
+        }
 
+                Label changed=numbersList.get(Integer.valueOf(strI.toString()))
+                        .get(Integer.valueOf(strJ.toString()));
+                gpField.getChildren().remove(changed);
+                changed=createLabel(
+                        Integer.valueOf(strI.toString()),
+                        Integer.valueOf(strJ.toString()),
+                        strColor.toString(),
+                        Integer.valueOf(strStep.toString())+1);
+                gpField.add(changed,
+                        Integer.valueOf(strI.toString()),
+                        Integer.valueOf(strJ.toString())
+                );
+    }
+
+    @FXML
+    void btnStop() {
+        for (Service<Void> thr:backgroundThreads) {
+            thr.reset();
+        }
     }
 
     @FXML
@@ -222,26 +314,12 @@ public class MainController {
         assert tgFieldSize != null : "fx:id=\"tgFieldSize\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert spHeight != null : "fx:id=\"spHeight\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert spWidth != null : "fx:id=\"spWidth\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert spDelay != null : "fx:id=\"spDelay\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert tgDisplay != null : "fx:id=\"tgDisplay\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert lvThreads != null : "fx:id=\"lvThreads\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert lvResults != null : "fx:id=\"lvResults\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert gpField != null : "fx:id=\"gpField\" was not injected: check your FXML file 'MainWindow.fxml'.";
         setControlsBehaviour();
 
-    }
-    private String prepareColor(Color myColor) {
-        int green = (int) (myColor.getGreen()*255);
-        String greenString = Integer.toHexString(green);
-
-        int red = (int) (myColor.getRed()*255);
-        String redString = Integer.toHexString(red);
-
-        int blue = (int) (myColor.getBlue()*255);
-        String blueString = Integer.toHexString(blue);
-
-        String hexColor = "#"+redString+""+greenString+""+blueString;
-        System.out.println(hexColor);
-        System.out.println(myColor.toString());
-        return hexColor;
     }
 }

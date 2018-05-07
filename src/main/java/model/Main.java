@@ -22,13 +22,13 @@ public class Main extends Application {
 
 //        EulerVandermonde eulerVandermonde=new EulerVandermonde(20,20);
 //        eulerVandermonde.startFinding();
-        PolygnacQuarters polygnacQuarters=new PolygnacQuarters(8,8);
-        polygnacQuarters.startFinding();
+//        PolygnacQuarters polygnacQuarters=new PolygnacQuarters(8,8);
+//        polygnacQuarters.startFinding();
 //        System.out.println("finish");
 //        eulerVandermonde.printPath();
-        polygnacQuarters.printPath();
+//        polygnacQuarters.printPath();
+        launch(args);
         Platform.exit();
-//        launch(args);
     }
 
     public static void setBundle(ResourceBundle res) {

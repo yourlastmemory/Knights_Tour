@@ -35,7 +35,7 @@ public class EulerVandermonde extends KnightsTour {
         setStartY(new Random().nextInt(height));
 //        setStartX(0);
 //        setStartY(1);
-        System.out.println("Start pos"+getStartX()+"  "+getStartY());
+        System.out.println("Start pos "+getStartX()+"  "+getStartY());
         getPath().add(new Integer[]{getStartX(),getStartY()});
         getField().get(getStartX()).set(getStartY(),"1");
 

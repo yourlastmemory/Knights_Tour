@@ -1,6 +1,8 @@
 package model.solutions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 
 public abstract class KnightsTour {
@@ -10,11 +12,21 @@ public abstract class KnightsTour {
     private Integer startY;
     private Integer fieldWidth;
     private Integer fieldHeight;
-
-    protected KnightsTour() {
+    private String color;
+    private static ArrayList<String> colorsList =
+            new ArrayList<>(Arrays.asList(
+                    "RED", "GREEN", "BLUE",
+                    "AQUA", "PURPLE", "GOLD",
+                    "MAGENTA", "DARKRED","DARKCYAN"));
+    public static void refreshColors(){
+        colorsList=new ArrayList<>(Arrays.asList(
+                "RED", "GREEN", "BLUE",
+                "AQUA", "PURPLE", "GOLD",
+                "MAGENTA", "DARKRED","DARKCYAN"));
+        Collections.shuffle(colorsList);
     }
 
-    public boolean isCorner(Integer[] coord) {
+    boolean isCorner(Integer[] coord) {
         System.out.println(coord[0]==null);
         return (coord[0]==0&&coord[1]==0)
                 ||(Objects.equals(coord[0], getFieldWidth()) &&coord[1]==0)
@@ -23,39 +35,42 @@ public abstract class KnightsTour {
                 && Objects.equals(coord[1], getFieldHeight()));
     }
 
-    public Integer getFieldWidth() {
+    Integer getFieldWidth() {
         return fieldWidth;
     }
 
-    public void setFieldWidth(Integer fieldWidth) {
+    void setFieldWidth(Integer fieldWidth) {
         this.fieldWidth = fieldWidth;
     }
 
-    public Integer getFieldHeight() {
+    Integer getFieldHeight() {
         return fieldHeight;
     }
 
-    public void setFieldHeight(Integer fieldHeight) {
+    void setFieldHeight(Integer fieldHeight) {
         this.fieldHeight = fieldHeight;
     }
 
-    public Integer getStartX() {
+    Integer getStartX() {
         return startX;
     }
 
-    public void setStartX(Integer startX) {
+    void setStartX(Integer startX) {
         this.startX = startX;
     }
 
-    public Integer getStartY() {
+    Integer getStartY() {
         return startY;
     }
 
-    public void setStartY(Integer startY) {
+    void setStartY(Integer startY) {
         this.startY = startY;
     }
 
-    public KnightsTour(int width, int height){
+    KnightsTour(int width, int height){
+        Collections.shuffle(colorsList);
+        color=colorsList.get(0);
+        colorsList.remove(0);
         field=new ArrayList<>();
         path=new ArrayList<>();
         initField(width,height);
@@ -65,19 +80,19 @@ public abstract class KnightsTour {
         return path;
     }
 
-    public void setPath(ArrayList<Integer[]> path) {
+    void setPath(ArrayList<Integer[]> path) {
         this.path = path;
     }
 
-    public ArrayList<ArrayList<String>> getField() {
+    ArrayList<ArrayList<String>> getField() {
         return field;
     }
 
-    public void setField(ArrayList<ArrayList<String>> field) {
+    void setField(ArrayList<ArrayList<String>> field) {
         this.field = field;
     }
 
-    protected void initField(int width, int height){};
+    protected void initField(int width, int height){}
 
     Integer countAvailableTurns(int i,int j){
         int res=0;
@@ -179,9 +194,9 @@ public abstract class KnightsTour {
         }
         System.out.println("\n\nPath\nSteps: "+path.size()+'\n');
 
-        for (int i = 0; i <field.size(); i++) {
-            for (int j = 0; j <field.get(i).size(); j++) {
-                System.out.print(field.get(i).get(j)+'\t');
+        for (ArrayList<String> aField : field) {
+            for (String anAField : aField) {
+                System.out.print(anAField + '\t');
             }
             System.out.println();
         }
@@ -201,5 +216,13 @@ public abstract class KnightsTour {
                 dgt.append(chr);
         }
         return (dgt.length()>0)?dgt.toString():"0";
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }
